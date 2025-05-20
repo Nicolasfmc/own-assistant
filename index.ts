@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+// import { Cron, CronExpression } from '@nestjs/schedule';
 import { TodoistClass } from './todoist';
 import { TodoistGetTasksRes } from './todoist/interfaces';
 import { OpenAIClass } from './openai';
@@ -21,6 +21,8 @@ const checkTasks = async (): Promise<void> => {
         return false;
     });
 
+    console.log(nearTasks);
+
     if (nearTasks.length > 0) {
       const taskContents = nearTasks.map((task) => task.content).join('\n');
       const message = `Tarefas próximas:\n${taskContents}\n\nAvise-me sobre essas tarefas.`;
@@ -35,9 +37,10 @@ const checkTasks = async (): Promise<void> => {
   }
 };
 
-cron.schedule('*/10 * * * *', () => {
+// @Cron(CronExpression.EVERY_10_MINUTES)
+const cronCheckTasks = () => {
   console.log('Iniciando verificação de tarefas...');
   checkTasks();
-});
+}
 
-console.log('Cron job iniciado!');
+cronCheckTasks();
